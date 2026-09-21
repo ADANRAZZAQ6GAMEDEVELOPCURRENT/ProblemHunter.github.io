@@ -220,20 +220,26 @@
   </footer>
 
   <script>
-    // STORAGE KEY FOR SHARED CATALOG
-    const STORAGE_KEY = "PRODUCT_HUNTER_DATABASE";
+   let products = [];
 
-    // Load active products from storage or fallback to empty array
-    function getStoredProducts() {
-      try {
-        const data = localStorage.getItem(STORAGE_KEY);
-        return data ? JSON.parse(data) : [];
-      } catch(e) {
-        return [];
-      }
+// Fetch products directly from products.json on GitHub
+async function loadCatalog() {
+  try {
+    // Adding a timestamp query (?v=...) prevents GitHub/browsers from showing outdated cached data
+    const res = await fetch('products.json?v=' + Date.now());
+    if (!res.ok) throw new Error('Could not find products.json');
+    products = await res.json();
+  } catch (err) {
+    console.warn("Could not load products.json, checking localStorage fallback:", err);
+    try {
+      const fallback = localStorage.getItem("PRODUCT_HUNTER_DATABASE");
+      products = fallback ? JSON.parse(fallback) : [];
+    } catch(e) {
+      products = [];
     }
-
-    let products = getStoredProducts();
+  }
+  render();
+}
     let currentCategory = 'all';
     let searchQuery = '';
 
@@ -412,14 +418,14 @@
     });
 
     // CHECK URL PARAMS ON LOAD (?code=123456)
-    window.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const codeParam = urlParams.get('code');
-      render();
-      if (codeParam) {
-        openProductModal(codeParam);
-      }
-    });
+   window.addEventListener('DOMContentLoaded', async () => {
+  await loadCatalog();
+  const urlParams = new URLSearchParams(window.location.search);
+  const codeParam = urlParams.get('code');
+  if (codeParam) {
+    openProductModal(codeParam);
+  }
+});
   </script>
 </body>
 </html>
