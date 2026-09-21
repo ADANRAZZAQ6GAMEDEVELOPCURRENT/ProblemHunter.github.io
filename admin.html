@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProductHunter — Admin Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #090d16; color: #f1f5f9; font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+  <!-- ADMIN HEADER -->
+  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-emerald-500 text-black font-black flex items-center justify-center font-display">PH</span>
+        <div>
+          <h1 class="font-display font-bold text-white text-base">ProductHunter Studio</h1>
+          <p class="text-[10px] text-slate-400">Affiliate Catalog Manager</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="index.html" target="_blank" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center gap-1.5 transition">
+          <span>View Live Website</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-6xl mx-auto w-full px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1">
+    
+    <!-- LEFT COLUMN: ADD / EDIT FORM (5 COLS) -->
+    <div class="lg:col-span-5 space-y-4">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl sticky top-24">
+        <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+          <h2 id="formTitle" class="font-display font-bold text-white text-lg flex items-center gap-2">
+            <i class="fa-solid fa-plus text-emerald-400"></i> Add New Product
+          </h2>
+          <button id="cancelEditBtn" class="hidden text-xs text-rose-400 hover:underline">Cancel Edit</button>
+        </div>
+
+        <form id="productForm" class="space-y-4 text-xs">
+          <input type="hidden" id="editOriginalCode" value="" />
+
+          <!-- 6-DIGIT CODE -->
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">6-Digit Distinct Code *</label>
+            <div class="flex gap-2">
+              <input type="text" id="formCode" maxlength="6" required placeholder="e.g. 849201" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white font-mono text-sm focus:border-emerald-500 focus:outline-none" />
+              <button type="button" id="generateCodeBtn" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition">
+                Random Code
+              </button>
+            </div>
+          </div>
+
+          <!-- TITLE -->
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Product Title *</label>
+            <input type="text" id="formTitleInput" required placeholder="e.g. RGB Mechanical Numpad with Knob" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-emerald-500 focus:outline-none" />
+          </div>
+
+          <!-- PRICES -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-300 mb-1">Display Price *</label>
+              <input type="text" id="formPrice" required placeholder="e.g. $19.99" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-emerald-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block font-bold text-slate-300 mb-1">Original Price (Strike)</label>
+              <input type="text" id="formOriginalPrice" placeholder="e.g. $34.00" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-emerald-500 focus:outline-none" />
+            </div>
+          </div>
+
+          <!-- CATEGORY & BADGE -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-300 mb-1">Category</label>
+              <select id="formCategory" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-emerald-500 focus:outline-none">
+                <option value="Tech & Gadgets">Tech & Gadgets</option>
+                <option value="Desk Setup">Desk Setup</option>
+                <option value="Lifestyle">Lifestyle</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-300 mb-1">Badge</label>
+              <input type="text" id="formBadge" placeholder="e.g. NEW DROP, 50% OFF" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-emerald-500 focus:outline-none" />
+            </div>
+          </div>
+
+          <!-- AFFILIATE URL -->
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Affiliate Destination URL *</label>
+            <input type="url" id="formAffiliateUrl" required placeholder="https://temu.to/... or https://..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-emerald-500 focus:outline-none" />
+          </div>
+
+          <!-- IMAGE URL -->
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Product Image URL *</label>
+            <input type="url" id="formImageUrl" required placeholder="https://..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-emerald-500 focus:outline-none" />
+          </div>
+
+          <!-- SHORT DESCRIPTION -->
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Short Description</label>
+            <textarea id="formDescription" rows="2" placeholder="Brief note from your review/reel..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-emerald-500 focus:outline-none"></textarea>
+          </div>
+
+          <!-- BULLET FEATURES -->
+          <div>
+            <label class="block font-bold text-slate-300 mb-1">Features / Specs (One per line)</label>
+            <textarea id="formFeatures" rows="3" placeholder="Hot-swappable switches&#10;Type-C braided cable&#10;Gasket mounted" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white focus:border-emerald-500 focus:outline-none"></textarea>
+          </div>
+
+          <button type="submit" id="submitBtn" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-sm tracking-wide shadow-lg shadow-emerald-500/20 transition">
+            Save Product To Catalog
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: EXISTING PRODUCTS & QUICK SEARCH (7 COLS) -->
+    <div class="lg:col-span-7 space-y-4">
+      
+      <!-- TOP CONTROLS & CODE SEARCH -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="relative w-full sm:w-72">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+          <input 
+            type="text" 
+            id="adminSearchInput" 
+            placeholder="Search by 6-digit code or name..." 
+            class="w-full pl-8 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+          />
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <span id="productCounter" class="text-xs text-slate-400 font-bold">0 Products</span>
+          <button id="exportJsonBtn" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-download"></i> Backup JSON
+          </button>
+        </div>
+      </div>
+
+      <!-- LIST OF EXISTING PRODUCTS -->
+      <div id="adminProductList" class="space-y-3">
+        <!-- Rendered via JavaScript -->
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "PRODUCT_HUNTER_DATABASE";
+
+    function getProducts() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function saveProducts(arr) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+      renderAdminList();
+    }
+
+    let products = getProducts();
+    let filterQuery = '';
+
+    // Form DOM
+    const productForm = document.getElementById('productForm');
+    const formTitle = document.getElementById('formTitle');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const editOriginalCode = document.getElementById('editOriginalCode');
+    const formCode = document.getElementById('formCode');
+    const generateCodeBtn = document.getElementById('generateCodeBtn');
+    const formTitleInput = document.getElementById('formTitleInput');
+    const formPrice = document.getElementById('formPrice');
+    const formOriginalPrice = document.getElementById('formOriginalPrice');
+    const formCategory = document.getElementById('formCategory');
+    const formBadge = document.getElementById('formBadge');
+    const formAffiliateUrl = document.getElementById('formAffiliateUrl');
+    const formImageUrl = document.getElementById('formImageUrl');
+    const formDescription = document.getElementById('formDescription');
+    const formFeatures = document.getElementById('formFeatures');
+    const submitBtn = document.getElementById('submitBtn');
+
+    const adminSearchInput = document.getElementById('adminSearchInput');
+    const adminProductList = document.getElementById('adminProductList');
+    const productCounter = document.getElementById('productCounter');
+    const exportJsonBtn = document.getElementById('exportJsonBtn');
+
+    // GENERATE UNIQUE 6-DIGIT CODE
+    function generateUnique6Digit() {
+      let code;
+      do {
+        code = Math.floor(100000 + Math.random() * 900000).toString();
+      } while (products.some(p => p.code === code));
+      return code;
+    }
+
+    generateCodeBtn.onclick = () => {
+      formCode.value = generateUnique6Digit();
+    };
+
+    // FORM SUBMIT (ADD OR EDIT)
+    productForm.onsubmit = (e) => {
+      e.preventDefault();
+      const code = formCode.value.trim();
+      const isEditing = Boolean(editOriginalCode.value);
+
+      // Validate 6 digits
+      if (!/^\d{6}$/.test(code)) {
+        alert("Product code must be exactly 6 digits.");
+        return;
+      }
+
+      // Check duplicate code if adding fresh
+      if (!isEditing && products.some(p => p.code === code)) {
+        alert("This 6-digit code is already assigned to another product!");
+        return;
+      }
+
+      const featuresArr = formFeatures.value
+        .split('\n')
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+
+      const newProduct = {
+        code: code,
+        title: formTitleInput.value.trim(),
+        price: formPrice.value.trim(),
+        originalPrice: formOriginalPrice.value.trim(),
+        category: formCategory.value,
+        badge: formBadge.value.trim(),
+        affiliateUrl: formAffiliateUrl.value.trim(),
+        imageUrl: formImageUrl.value.trim(),
+        description: formDescription.value.trim(),
+        features: featuresArr,
+        updatedAt: Date.now()
+      };
+
+      if (isEditing) {
+        const index = products.findIndex(p => p.code === editOriginalCode.value);
+        if (index !== -1) {
+          products[index] = newProduct;
+        }
+      } else {
+        products.unshift(newProduct);
+      }
+
+      saveProducts(products);
+      resetForm();
+    };
+
+    // EDIT ITEM
+    window.editProduct = function(code) {
+      const p = products.find(i => i.code === code);
+      if (!p) return;
+
+      editOriginalCode.value = p.code;
+      formCode.value = p.code;
+      formTitleInput.value = p.title;
+      formPrice.value = p.price;
+      formOriginalPrice.value = p.originalPrice || '';
+      formCategory.value = p.category || 'Tech & Gadgets';
+      formBadge.value = p.badge || '';
+      formAffiliateUrl.value = p.affiliateUrl || '';
+      formImageUrl.value = p.imageUrl || '';
+      formDescription.value = p.description || '';
+      formFeatures.value = Array.isArray(p.features) ? p.features.join('\n') : '';
+
+      formTitle.innerHTML = `<i class="fa-solid fa-pen text-yellow-400"></i> Edit Product (#${p.code})`;
+      submitBtn.textContent = "Save Changes";
+      cancelEditBtn.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // REMOVE ITEM
+    window.removeProduct = function(code) {
+      if (confirm(`Are you sure you want to remove product #${code}?`)) {
+        products = products.filter(p => p.code !== code);
+        saveProducts(products);
+        if (editOriginalCode.value === code) resetForm();
+      }
+    };
+
+    function resetForm() {
+      productForm.reset();
+      editOriginalCode.value = '';
+      formTitle.innerHTML = `<i class="fa-solid fa-plus text-emerald-400"></i> Add New Product`;
+      submitBtn.textContent = "Save Product To Catalog";
+      cancelEditBtn.classList.add('hidden');
+    }
+
+    cancelEditBtn.onclick = resetForm;
+
+    // SEARCH LIST
+    adminSearchInput.oninput = (e) => {
+      filterQuery = e.target.value.toLowerCase().trim();
+      renderAdminList();
+    };
+
+    // RENDER ADMIN LIST
+    function renderAdminList() {
+      products = getProducts();
+      productCounter.textContent = `${products.length} Products`;
+
+      const filtered = products.filter(p => {
+        return !filterQuery || p.code.includes(filterQuery) || p.title.toLowerCase().includes(filterQuery);
+      });
+
+      adminProductList.innerHTML = '';
+
+      if (filtered.length === 0) {
+        adminProductList.innerHTML = `
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center text-slate-500 text-xs">
+            <i class="fa-solid fa-box-open text-2xl mb-2 text-slate-600"></i>
+            <p>No products in catalog yet. Use the form on the left to add your first product!</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const item = document.createElement('div');
+        item.className = "bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition";
+        item.innerHTML = `
+          <div class="flex items-center gap-3 flex-1 min-w-0">
+            <img src="${p.imageUrl}" alt="" class="w-14 h-14 object-cover rounded-lg bg-slate-950 border border-slate-800 flex-shrink-0" onerror="this.src='https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=100&auto=format&fit=crop&q=80'" />
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono font-bold text-xs">#${p.code}</span>
+                <span class="text-[10px] text-slate-400 font-bold uppercase">${p.category || 'General'}</span>
+                ${p.badge ? `<span class="text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">${p.badge}</span>` : ''}
+              </div>
+              <h4 class="text-sm font-bold text-white truncate">${p.title}</h4>
+              <div class="text-xs text-emerald-400 font-extrabold mt-0.5">${p.price}</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 self-end sm:self-center">
+            <button onclick="editProduct('${p.code}')" class="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 text-xs font-bold flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-pen"></i> Edit
+            </button>
+            <button onclick="removeProduct('${p.code}')" class="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-bold flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-trash"></i> Remove
+            </button>
+          </div>
+        `;
+        adminProductList.appendChild(item);
+      });
+    }
+
+    // BACKUP JSON FILE
+    exportJsonBtn.onclick = () => {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(products, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "products.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    };
+
+    // Auto-generate first random code on load
+    formCode.value = generateUnique6Digit();
+    renderAdminList();
+  </script>
+</body>
+</html>
